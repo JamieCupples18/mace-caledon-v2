@@ -1,0 +1,82 @@
+/* Fancy Card Component */
+.signupcard {
+  background-color: #ffffff;
+  border: 0px solid #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 40px; /* Added margin-right to create space between signup and login cards */
+}
+
+.logincard {
+  background-color: #ffffff;
+  border: 0px solid #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 40px;
+}
+
+/* Login and Signup Styles */
+.home-container {
+  background-color: rgb(91, 168, 171);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align items at the start of the cross axis (top of the container) */
+  height: 100vh;
+}
+
+.login-card,
+.signup-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 400px;
+}
+
+.login-card h2,
+.signup-card h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333333;
+}
+
+.login-card .form,
+.signup-card .form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-card label,
+.signup-card label {
+  margin-bottom: 8px;
+  color: #555555;
+}
+
+.login-card .input,
+.signup-card .input {
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.login-card .button,
+.signup-card .button {
+  background-color: #007bff;
+  color: #ffffff;
+  padding: 12px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.login-card .button:hover,
+.signup-card .button:hover {
+  background-color: #0056b3;
+}
