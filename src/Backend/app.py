@@ -1,5 +1,7 @@
+# Backend (Flask)
+
 from flask_restx import Resource, Namespace, reqparse, Api
-from flask import Flask, session, jsonify, Request
+from flask import Flask, session, jsonify, request
 from flask_session import Session
 from pymongo.errors import PyMongoError
 from flask_cors import CORS, cross_origin
@@ -10,6 +12,7 @@ from flask import send_file
 from config.mongoconfig import MONGO_CONNECTION
 from config.mongo_setup import get_mongo_client  # Importing get_mongo_client method
 from werkzeug.security import check_password_hash, generate_password_hash
+import secrets
 
 # Create Flask application
 app = Flask(__name__)
@@ -151,110 +154,28 @@ class LoginResource(Resource):
 
 #================================= USER DETAILS / Account Basic Information API ===========================================
             
-def get_session_email():
-    return session.get('email')
-
-save_panel_parser = reqparse.RequestParser()
-save_panel_parser.add_argument('employeeId', required=True, help="Employee ID cannot be blank")
-save_panel_parser.add_argument('manager', required=True, help="Manager cannot be blank")
-save_panel_parser.add_argument('supervisor', required=True, help="Supervisor cannot be blank")
-save_panel_parser.add_argument('location', required=True, help="Location cannot be blank")
-
 @overviewinfo.route('/save')
-class UpdateProfile(Resource):  # Renamed to UpdateProfile for clarity
-    @overviewinfo.expect(save_panel_parser)
-    @cross_origin()
+class UpdateRecord(Resource):
+    overviewinfo_parser = reqparse.RequestParser()
+    overviewinfo_parser.add_argument('email', type=str, required=True, help='Email is required')
+    overviewinfo_parser.add_argument('manager', type=str, required=True, help='manager is required')
+    overviewinfo_parser.add_argument('supervisor', type=str, required=True, help='supervisor is required')
+
     def post(self):
-        args = save_panel_parser.parse_args()
+        data = request.json
+        email = data['email']
+        manager = data['manager']
+        supervisor = data['supervisor']
 
-        # Data to update
-        employee_id = args['employeeId']
-        location = args['location']
-        manager = args['manager']
-        supervisor = args['supervisor']
+        result = users_collection.update_one(
+            {"email" : email},
+            {"$set": {"manager": manager, "supervisor": supervisor}}
+        )
 
-        user_email = session.get('email')
-
-        if not user_email:
-            return {"error": "Session email is required"}, 400
-        print(user_email)
-        
-        update_data = {  # Removed unnecessary use of request.get_json()
-            'employeeId': employee_id,
-            'location': location,
-            'manager': manager,
-            'supervisor': supervisor
-        }
-        print(update_data)
-
-        try:
-            # Update user profile in the database
-            result = users_collection.find_one_and_update(
-                {"email": user_email},
-                {"$set": update_data},
-                return_document=ReturnDocument.AFTER
-            )
-            print(result)
-
-            if result:
-                return {"message": "Profile updated successfully"}, 200
-            else:
-                return {"error": "User not found"}, 404
-
-        except PyMongoError as e:
-            logging.error(f"Error updating profile for user with email {user_email}: {e}")
-            return {'message': 'Internal server error'}, 500
-
-
-# @overviewinfo.route('/saveaa', methods=['POST'])
-# class PanelSaveResource(Resource):
-#     @overviewinfo.expect(save_panel_parser)
-#     @cross_origin()
-#     def post(self):
-#         with app.app_context():
-#             mongo_client = get_mongo_client()  # Use get_mongo_client method to get MongoDB client
-#             if mongo_client is None:
-#                 logging.error("Failed to connect to MongoDB.")
-#                 return {'message': 'Failed to connect to MongoDB '}, 500
-            
-#             data = save_panel_parser.parse_args()
-#             employee_id = data['employeeId']
-#             location = data['location']
-#             manager = data['manager']
-#             supervisor = data['supervisor']
-
-#             # Get user information from session
-#             email = session.get('email')
-#             if email is None:
-#                 logging.error("User information not found in session.")
-#                 return {'message': 'User information not found'}, 401
-
-#             logging.info(f"Received request to save overview info data for email: {email}")
-
-#             try:
-#                 # Check if the user exists in the database
-#                 user = users_collection.find_one({'email': email})
-#                 if user:
-#                     # Update the user's profile with the new information
-#                     users_collection.update_one(
-#                         {'email': email},
-#                         {'$set': {
-#                             'employeeId': employee_id,
-#                             'location': location,
-#                             'manager': manager,
-#                             'supervisor': supervisor
-#                         }},
-#                         upsert=True
-#                     )
-#                     logging.info("Overview info data saved successfully")
-#                     return {'message': 'Overview info data saved successfully'}, 201
-#                 else:
-#                     logging.error(f"User with email {email} not found in the database.")
-#                     return {'message': 'User not found'}, 404
-
-#             except PyMongoError as e:
-#                 logging.error(f"Error saving overview info data: {e}")
-#                 return {'message': 'Internal server error'}, 500
+        if result.matched_count:
+            return {'success': True, "message": "Record updated successfully."}, 200
+        else:
+            return {'success': False, "message": "Email not found."}, 404
 
 
 if __name__ == '__main__':

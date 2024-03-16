@@ -1,3 +1,5 @@
+// Frontend (React)
+
 import React, { useState } from "react";
 import Panel from "./panel"; // Importing CSS file for styling
 
@@ -6,44 +8,21 @@ function Panel2() {
   const [location, setLocation] = useState("Co.Tyrone - Caledon");
   const [manager, setManager] = useState("Adam Jones");
   const [supervisor, setSupervisor] = useState("Adam Jones");
+  const email = sessionStorage.getItem("email"); // Corrected key name
 
-  const handleSave = async () => {
-    // Retrieve email and role from session storage
-    const email = sessionStorage.getItem("email");
-    console.log(email);
-    const role = sessionStorage.getItem("role");
-    console.log(role);
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-    // Prepare data to be sent to the backend
-    const data = {
-      employeeId,
-      location,
-      manager,
-      supervisor,
-    };
+    const data = { email, manager, supervisor }; // Updated data structure
 
-    try {
-      // Send data to the backend
-      const response = await fetch(
-        "http://localhost:8080/overviewinfouser/save",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log("Data saved successfully:", result);
-      } else {
-        console.error("Error saving data:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error saving data:", error);
-    }
+    fetch("http://localhost:8080/overviewinfouser/save", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error("Error: ", error));
   };
 
   return (
@@ -105,7 +84,7 @@ function Panel2() {
         </div>
       </div>
 
-      <button onClick={handleSave}>Save</button>
+      <button onClick={handleSubmit}>Save</button>
     </Panel>
   );
 }
