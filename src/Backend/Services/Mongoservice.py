@@ -1,5 +1,5 @@
 import pymongo as pm
-from api.Config import MONGO_CONNECTION
+from config.Config import MONGO_CONNECTION
 
 class MongoService:
     def __init__(self):

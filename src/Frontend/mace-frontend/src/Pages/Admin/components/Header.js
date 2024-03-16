@@ -1,29 +1,42 @@
 import React from "react";
+import "./header.css";
 
-function Header() {
+const Header = () => {
+  const onClickLogo = (event) => {
+    console.log("onClickLogo", event);
+  };
+
+  const onSearchClick = (event) => {
+    console.log("onSearchClick", event);
+  };
+
+  const onMenuClick = (event) => {
+    console.log("onMenuClick", event);
+  };
+
   return (
-    <header style={headerStyle}>
-      <h2 style={headingStyle}>Admin Dashboard</h2>
-      <p style={subHeadingStyle}></p>
+    <header className="header">
+      {/* Logo Section */}
+      <div className="logo-section" onclick={onClickLogo}>
+        <span className="logo">RetailHubs |</span>
+        <span className="label">Admin | Dashboard</span>
+      </div>
+
+      {/* Search Section */}
+      <div className="search" onClick={onSearchClick}>
+        Search
+      </div>
+
+      {/* Menu and Avatar Section */}
+      <div className="menu-avatar-section">
+        <div className="menu" onclick={onMenuClick}>
+          Menu
+        </div>
+        {/* Avatar Section you can insert an image or use text */}
+        <div className="avatar">AB</div>
+      </div>
     </header>
   );
-}
-
-const headerStyle = {
-  background: "#000000",
-  padding: "20px",
-  color: "#61dafb",
-  textAlign: "center",
-};
-
-const headingStyle = {
-  fontSize: "2em",
-  margin: "0",
-};
-
-const subHeadingStyle = {
-  fontSize: "1.2em",
-  margin: "10px 0 0",
 };
 
 export default Header;

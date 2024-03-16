@@ -1,5 +1,8 @@
 version: "3"
 
+networks:
+  app-network:
+
 services:
   macecaledon-api:
     build:
@@ -15,10 +18,11 @@ services:
     depends_on:
       - mongo
     environment:
-      - API_PORT = 8080
-      - API_HOSTNAME = 0.0.0.0
+      - API_PORT=8080
+      - API_HOSTNAME=0.0.0.0
+    networks:
+      - app-network
 
-  # Frontend service
   macecaledon-frontend:
     build:
       context: ./Frontend/mace-frontend
@@ -26,10 +30,13 @@ services:
     container_name: macecaledon-frontend
     ports:
       - "3000:3000"
+    environment:
+      - NODE_ENV=production
     volumes:
       - "./Frontend/mace-frontend:/app"
+    networks:
+      - app-network
 
-  # MongoDB service
   mongo:
     restart: unless-stopped
     image: mongo:latest
@@ -37,3 +44,25 @@ services:
     command: mongod --port 8200
     ports:
       - "8200:8200"
+    networks:
+      - app-network
+    volumes:
+      - mongo-data:/data/db
+
+  nginx:
+    build:
+      context: ./Frontend/mace-frontend/nginx
+    ports:
+      - "443:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./certs:/etc/nginx/certs:ro
+    depends_on:
+      - macecaledon-api
+      - macecaledon-frontend
+      - mongo
+    networks:
+      - app-network
+
+volumes:
+  mongo-data:

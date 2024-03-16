@@ -1,0 +1,65 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Documentation",
+    "version": "1.0",
+    "description": "APIs for your application"
+  },
+  "paths": {
+    "/overviewinfouser/save": {
+      "post": {
+        "summary": "Save overview info data",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "employeeId": { "type": "string" },
+                  "location": { "type": "string" },
+                  "manager": { "type": "string" },
+                  "supervisor": { "type": "string" }
+                },
+                "required": ["employeeId", "location", "manager", "supervisor"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Overview info data saved successfully"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/overviewinfouser/get": {
+      "get": {
+        "summary": "Retrieve overview info data",
+        "responses": {
+          "200": {
+            "description": "Overview info data retrieved successfully"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/overviewinfouser/delete": {
+      "delete": {
+        "summary": "Delete all overview info data",
+        "responses": {
+          "200": {
+            "description": "Deleted all overview info data successfully"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  }
+}

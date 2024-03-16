@@ -1,0 +1,9 @@
+.panel {
+  background-color: #ffffff; /* White background */
+  border-radius: 10px; /* Border radius */
+  border: 1px solid #dddddd; /* Optional: Add border */
+  padding: 20px; /* Optional: Add padding */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add box shadow */
+  max-width: 100%;
+  width: 78vw;
+}

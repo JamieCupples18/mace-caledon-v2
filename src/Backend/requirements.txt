@@ -1,5 +1,4 @@
 Flask==3.0.0
-#Flask-Cors==4.0.0
 pymongo[srv]==4.6.1
 Flask-SQLAlchemy==3.1.1
 Flask_JWT_Extended==4.6.0
@@ -16,3 +15,7 @@ flask-talisman==1.1.0
 cffi==1.16.0
 cryptography==42.0.1
 pycparser==2.21
+pyopenssl==24.0.0
+bcrypt==4.1.2
+six==1.16.0
+flask_session==0.6.0
